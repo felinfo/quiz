@@ -11,13 +11,22 @@ exports.load = function(req, res, next, quizId){
 	}).catch(function(error) {next(error);})	
 };
 
-
-
 // GET /quizes
 exports.index = function(req, res){
-	models.Quiz.findAll().then(function(quizes){
+	if (req.query.search){
+		var filtro = req.query.search;
+		filtro = '%' + filtro + '%';
+		filtro = filtro.replace(/ /g, '%')
+
+		models.Quiz.findAll({where:["pregunta like ?", filtro], order: "pregunta ASC"}).then(function(quizes){
 		res.render('quizes/index', {quizes: quizes});
-	}).catch(function(error) {next(error);})	
+		}).catch(function(error) {next(error);})	
+	}
+	else{
+		models.Quiz.findAll().then(function(quizes){
+			res.render('quizes/index', {quizes: quizes});
+		}).catch(function(error) {next(error);})	
+	}
 };
 
 // GET /quizes/:id
@@ -33,3 +42,4 @@ exports.answer = function(req, res){
 		}
 		res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
 };
+
