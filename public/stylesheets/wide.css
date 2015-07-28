@@ -26,3 +26,9 @@ footer {
 	clear: both;
 	display: block;
 }
+
+
+.table-centred {
+	margin: 0px auto; 
+	width: 500px;
+}
